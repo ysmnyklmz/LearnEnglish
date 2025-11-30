@@ -1,4 +1,4 @@
-// --- 1. GİRİŞ SİMÜLASYONU ---
+//Giriş
 document.getElementById('fakeLoginForm').addEventListener('submit', function(e) {
     e.preventDefault(); // Sayfanın yenilenmesini engelle
     
@@ -14,7 +14,7 @@ document.getElementById('fakeLoginForm').addEventListener('submit', function(e) 
     document.getElementById('loginBtn').style.display = 'none';
     document.getElementById('userDropdown').style.display = 'block';
 
-    // Load and show user score, then load content
+    
     loadScoreFromStorage();
     showScorePanel();
 
@@ -23,7 +23,7 @@ document.getElementById('fakeLoginForm').addEventListener('submit', function(e) 
     loadQuizByLevel('A1');
 });
 
-// --- 2. VERİLER ---
+//Veriler
 const wordData = {
     'A1': [
         { word: "Beautiful", meaning: "Güzel", sentence: "The garden is very beautiful in spring." },
@@ -264,7 +264,7 @@ const quizQuestions = {
     ]
 };
 
-// --- 2.5 SKOR YÖNETİMİ ---
+//Skor Yönetimi
 const STORAGE_KEY = 'gsb_user_score';
 let userScore = 0;
 
@@ -321,7 +321,7 @@ function triggerShake() {
     setTimeout(() => document.body.classList.remove('shake'), 500);
 }
 
-// --- 3. KELİME ÇALIŞMASI FONKSİYONLARI ---
+
 function loadWords(level) {
     const container = document.getElementById('wordList');
     document.getElementById('currentLevelTitle').innerText = level + " Seviyesi - En Çok Kullanılan Kelimeler";
@@ -337,7 +337,7 @@ function loadWords(level) {
     if(list.length === 0) container.innerHTML = "<p class='text-muted'>Bu seviye için henüz kelime eklenmedi.</p>";
 
     list.forEach((item, index) => {
-        // Her kelime için özel bir sonuç alanı ID'si oluşturuyoruz
+        
         const feedbackId = `feedback-${level}-${index}`;
         
         const cardHTML = `
@@ -368,9 +368,9 @@ function loadWords(level) {
     });
 }
 
-// --- SESLİ KONTROL (SPEECH TO TEXT) ---
+//speech to text
 function checkPronunciation(targetWord, feedbackElementId, btnElement) {
-    // Tarayıcı desteği kontrolü (Chrome, Edge, Safari vb.)
+    
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     
     if (!SpeechRecognition) {
@@ -379,12 +379,12 @@ function checkPronunciation(targetWord, feedbackElementId, btnElement) {
     }
 
     const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US'; // İngilizce algılaması için
+    recognition.lang = 'en-US'; 
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
     const feedbackEl = document.getElementById(feedbackElementId);
-    // const originalIcon = btnElement.innerHTML; // Orijinal koddan çıkarıldı, gerekli değil
+
 
     // Dinleme Başladığında
     recognition.onstart = function() {
@@ -399,35 +399,35 @@ function checkPronunciation(targetWord, feedbackElementId, btnElement) {
         // Kullanıcının söylediği kelimeyi al
         const userSpeech = event.results[0][0].transcript.trim();
         
-        // Karşılaştırma yap (Büyük/küçük harf ve noktalamayı temizle)
+        // Karşılaştırma yap 
         const cleanUserSpeech = userSpeech.toLowerCase().replace(/[^a-zA-Z ]/g, "");
         const cleanTarget = targetWord.toLowerCase().replace(/[^a-zA-Z ]/g, "");
 
         if (cleanUserSpeech === cleanTarget) {
-            // DOĞRU
+            
             feedbackEl.innerHTML = `<span class="text-success"><i class="fas fa-check-circle"></i> Harika! (${userSpeech})</span>`;
             
-            // Eğer puan sistemi varsa puan verelim
+            
             if(typeof incrementUserScore === 'function') {
                 incrementUserScore(5); 
             }
             
-            // Görsel Kutlama
+            
             btnElement.className = "btn btn-success rounded-circle ms-1";
             btnElement.innerHTML = '<i class="fas fa-check"></i>';
             
-            // 2 saniye sonra butonu eski haline getir
+            
             setTimeout(() => {
                 btnElement.className = "btn btn-sm btn-outline-danger rounded-circle ms-1";
                 btnElement.innerHTML = '<i class="fas fa-microphone"></i>';
-                feedbackEl.innerHTML = ''; // Yazıyı temizle
+                feedbackEl.innerHTML = ''; 
             }, 2500);
 
         } else {
-            // YANLIŞ
+            
             feedbackEl.innerHTML = `<span class="text-danger"><i class="fas fa-times-circle"></i> Algılanan: "${userSpeech}"</span>`;
             
-            // Hata efekti (Ekran titretme mevcutsa)
+            
             if(typeof triggerShake === 'function') {
                 triggerShake();
             }
@@ -454,7 +454,7 @@ function speak(text) {
     window.speechSynthesis.speak(utterance);
 }
 
-// --- 4. SINAV FONKSİYONLARI ---
+//Sınav fonksiyonları
 let currentQIndex = 0;
 let currentQuizLevel = 'A1';
 
@@ -462,16 +462,16 @@ function loadQuizByLevel(level) {
     currentQuizLevel = level;
     currentQIndex = 0;
     
-    // Update button states
+    
     document.querySelectorAll('#quiz .btn-group .btn').forEach(btn => {
         btn.classList.remove('active');
         if(btn.innerText === level) btn.classList.add('active');
     });
 
-    // Update title
+    
     document.getElementById('currentQuizLevelTitle').innerText = level + " Seviyesi - Sınav";
 
-    // Load first question
+    
     loadQuiz();
 }
 
@@ -495,28 +495,28 @@ function loadQuiz() {
 }
 
 function checkAnswer(selected, correct, btn) {
-    // Disable all option buttons for this question to avoid multiple scoring
+    
     const optionButtons = document.querySelectorAll('#options-container button');
     optionButtons.forEach(b => b.disabled = true);
 
     if (selected === correct) {
         btn.className = "btn btn-success text-start py-2";
         btn.innerHTML += ' <i class="fas fa-check float-end mt-1"></i>';
-        // Award points for correct answer
+        
         incrementUserScore(10);
-        // Trigger celebration
+        
         const quizCard = document.querySelector('.card.border-danger');
         triggerCelebration(quizCard);
     } else {
         btn.className = "btn btn-danger text-start py-2";
         btn.innerHTML += ' <i class="fas fa-times float-end mt-1"></i>';
-        // Trigger shake for wrong answer
+        
         triggerShake();
-        // Optionally highlight the correct one
+        
         optionButtons.forEach(b => {
             if (b.innerText.trim().includes(correct)) {
-                // Sadece metin içeriyorsa, metnin sonunda doğru cevap olduğu varsayımıyla (Orijinal kodda bu metin yakalama kısmı biraz karmaşık ama amaç doğru cevabı yeşil yapmak)
-                if(b.className.includes("btn-danger") === false) { // Yanlış seçilen butonu tekrar yeşile çevirmemek için
+                
+                if(b.className.includes("btn-danger") === false) { 
                     b.className = 'btn btn-success text-start py-2';
                 }
             }
@@ -529,10 +529,10 @@ function nextQuestion() {
     loadQuiz();
 }
 
-// Sayfa yüklendiğinde skoru yükle (Giriş yapılmamış olsa bile hazır olsun)
+// Sayfa yüklendiğinde skor
 document.addEventListener('DOMContentLoaded', loadScoreFromStorage);
 
-// Logout fonksiyonu: kullanıcıyı oturumu kapatılmış gibi yönlendir ve puarı temizle
+//oturumu kapatma
 function logout() {
     try {
         localStorage.removeItem(STORAGE_KEY);
@@ -542,18 +542,18 @@ function logout() {
     userScore = 0;
     updateScoreDisplay();
 
-    // Görünürlükleri sıfırla (sayfa yeniden yükleneceği için bunlar şart değil ama kullanıcı deneyimi için)
+    
     var scorePanel = document.getElementById('scorePanel'); if(scorePanel) scorePanel.style.display = 'none';
     var dashboard = document.getElementById('dashboard-section'); if(dashboard) dashboard.style.display = 'none';
     var landing = document.getElementById('landing-section'); if(landing) landing.style.display = 'block';
     var loginBtn = document.getElementById('loginBtn'); if(loginBtn) loginBtn.style.display = 'inline-block';
     var userDropdown = document.getElementById('userDropdown'); if(userDropdown) userDropdown.style.display = 'none';
 
-    // Yönlendir (index.html ana sayfaya geri dönsün)
+    
     window.location.href = 'index.html';
 }
 
-// Logout butonunu bağlama (sayfa yüklendiğinde eleman mevcut olacaktır)
+
 document.addEventListener('DOMContentLoaded', function() {
     var lb = document.getElementById('logoutBtn');
     if (lb) {
