@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GSB BİZ | Learn English</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="fas fa-book-reader me-2"></i>GSB BİZ | İngilizce Öğrenme Platformu</a>
+            
+            <div class="d-flex align-items-center">
+                <button id="loginBtn" class="btn btn-edevlet" data-bs-toggle="modal" data-bs-target="#loginModal">
+                    <img src="/Users/yaseminyikilmaz/Desktop/adsız klasör/edevlet.jpeg" alt="e-Devlet Logosu" style="height: 20px; margin-right: 5px;">
+                    E-Devlet ile Giriş Yap
+                </button>
+
+                <div id="scorePanel" class="d-flex align-items-center ms-3 me-3" style="display:none;">
+                    <span class="badge bg-white text-danger fw-bold" style="padding: 10px 14px; font-size: 1rem;">
+                        <i class="fas fa-star me-1"></i>Kullanıcı Skoru: <span id="userScore">0</span>
+                    </span>
+                </div>
+
+                <div id="userDropdown" class="dropdown" style="display: none;">
+                    <button id="userDisplayBtn" class="btn btn-link text-white fw-bold dropdown-toggle p-0 mt-2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle me-1"></i> Hoşgeldiniz
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2 text-danger"></i>Çıkış Yap</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="landing-section" class="container text-center py-5">
+        <h1 class="display-5 fw-bold text-dark mb-3">Gençlik ve Spor Bakanlığı</h1>
+        <h3 class="text-secondary mb-4">Yabancı Dil Eğitim Platformu</h3>
+        
+        <p class="lead">Eğitim içeriklerine erişmek için lütfen e-Devlet ile giriş yapınız.</p>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <img src="/Users/yaseminyikilmaz/Desktop/adsız klasör/learn.png" alt="Eğitim Tanıtımı" class="hero-image">
+                <p class="text-muted mt-2 small"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboard-section" class="container mt-4">
+        <ul class="nav nav-tabs" id="levelTabs" role="tablist">
+            <li class="nav-item" role="presentation"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#study" type="button" role="tab" aria-selected="true" aria-controls="study"><i class="fas fa-graduation-cap me-2"></i>Kelime Çalışması</button></li>
+            <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#quiz" type="button" role="tab" aria-selected="false" aria-controls="quiz"><i class="fas fa-pencil-alt me-2"></i>Sınav Alanı</button></li>
+        </ul>
+
+        <div class="tab-content mt-3">
+            <div class="tab-pane fade show active" id="study">
+                <div class="btn-group mb-4 w-100" role="group">
+                    <button class="btn btn-outline-danger active" onclick="loadWords('A1')">A1</button>
+                    <button class="btn btn-outline-danger" onclick="loadWords('A2')">A2</button>
+                    <button class="btn btn-outline-danger" onclick="loadWords('B1')">B1</button>
+                    <button class="btn btn-outline-danger" onclick="loadWords('B2')">B2</button>
+                    <button class="btn btn-outline-danger" onclick="loadWords('C1')">C1</button>
+                    <button class="btn btn-outline-danger" onclick="loadWords('C2')">C2</button>
+                </div>
+                
+                <h4 id="currentLevelTitle" class="mb-3 text-danger">A1 Seviyesi</h4>
+                <div id="wordList" class="row"></div>
+            </div>
+
+            <div class="tab-pane fade" id="quiz">
+                <div class="btn-group mb-4 w-100" role="group">
+                    <button class="btn btn-outline-danger active" onclick="loadQuizByLevel('A1')">A1</button>
+                    <button class="btn btn-outline-danger" onclick="loadQuizByLevel('A2')">A2</button>
+                    <button class="btn btn-outline-danger" onclick="loadQuizByLevel('B1')">B1</button>
+                    <button class="btn btn-outline-danger" onclick="loadQuizByLevel('B2')">B2</button>
+                    <button class="btn btn-outline-danger" onclick="loadQuizByLevel('C1')">C1</button>
+                    <button class="btn btn-outline-danger" onclick="loadQuizByLevel('C2')">C2</button>
+                </div>
+
+                <h4 id="currentQuizLevelTitle" class="mb-3 text-danger">A1 Seviyesi - Sınav</h4>
+                <div class="card border-danger">
+                    <div class="card-header bg-danger text-white">Quiz</div>
+                    <div class="card-body">
+                        <p id="question-text" class="lead fw-bold">Soru yükleniyor...</p>
+                        <div id="options-container" class="d-grid gap-2"></div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-dark float-end" onclick="nextQuestion()">Sonraki Soru <i class="fas fa-arrow-right ms-1"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
+    
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #f0f0f0;">
+                    <h5 class="modal-title" style="color: #cc0000; font-weight: bold;">e-Devlet Kapısı</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" title="Kapat"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="text-center mb-3">
+                        <img src="/Users/yaseminyikilmaz/Desktop/adsız klasör/edevlet.jpeg" width="100" alt="e-Devlet Kapısı Logosu">
+                        <p class="text-muted mt-2">Kimlik doğrulama sistemi</p>
+                    </div>
+                    <form id="fakeLoginForm">
+                        <div class="mb-3">
+                            <input type="text" id="tcInput" class="form-control" placeholder="T.C. Kimlik No" required maxlength="11" pattern="\d{11}" title="Lütfen tam 11 haneli T.C. Kimlik No girin">
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" class="form-control" placeholder="e-Devlet Şifresi" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2" style="background-color: #1E4B9F;">Giriş Yap</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

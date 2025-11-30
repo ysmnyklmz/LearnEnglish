@@ -1,0 +1,90 @@
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background-color: #f8f9fa; 
+}
+
+/* Navbar */
+.navbar-custom { 
+    background-color: #cc0000; 
+} /* GSB Kırmızısı */
+
+.navbar-brand { 
+    font-weight: bold; 
+    color: white !important; 
+}
+
+/* E-Devlet Butonu */
+.btn-edevlet {
+    background-color: white;
+    color: #cc0000;
+    border: 1px solid white;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 8px 20px;
+    transition: all 0.3s;
+}
+
+.btn-edevlet:hover { 
+    background-color: #f0f0f0; 
+    color: #a00000; 
+}
+
+/* Dashboard */
+#dashboard-section { 
+    display: none; 
+}
+
+/* Canva Resim Alanı */
+.hero-image {
+    max-width: 100%;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+/* Mikrofon efekt */
+.pulse-animation {
+    animation: pulse-red 1.5s infinite;
+}
+
+@keyframes pulse-red {
+    0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+}
+
+/* Celebration Animation */
+@keyframes celebrate {
+    0% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.1) rotate(-5deg); }
+    50% { transform: scale(1.15) rotate(5deg); }
+    75% { transform: scale(1.1) rotate(-5deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+.celebrate {
+    animation: celebrate 0.6s ease-in-out;
+}
+
+/* Confetti Effect */
+@keyframes confetti-fall {
+    0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(200px) rotate(360deg); opacity: 0; }
+}
+
+.confetti {
+    position: fixed;
+    pointer-events: none;
+    animation: confetti-fall 2s ease-out forwards;
+}
+
+/* Screen Shake Animation */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+    20%, 40%, 60%, 80% { transform: translateX(10px); }
+}
+
+body.shake {
+    animation: shake 0.5s ease-in-out;
+}
